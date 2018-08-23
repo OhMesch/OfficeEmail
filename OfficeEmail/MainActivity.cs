@@ -10,9 +10,11 @@ namespace OfficeEmail
     [Activity(Label = "OfficeEmail", MainLauncher = true, Icon = "@drawable/officeEmailMan")]
     public class MainActivity : Activity
     {
-        private string toEmailAddress = "TO_EMAIL@gmail.com";
-        private string fromEmailAddress = "FROM_EMAIL@gmail.com";
+        private string toEmailAddress = "TO@GMAIL.COM";
+        private string fromEmailAddress = "FROM@GMAIL.COM";
         private string fromEmailPassword = "FROM_PASSWORD";
+        private string messageSubject = "Parking Pass";
+        private string visitorName = "JOHN SMITH";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -35,9 +37,9 @@ namespace OfficeEmail
             try
             {
                 gmailClient.Send(email);
-                popupMessage("Email Sent. Thank you.");
+                popupMessage("Email Sent to: " + toEmailAddress + ". Thank you.");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 popupMessage("Error: " + e.Message);
             }
@@ -46,13 +48,20 @@ namespace OfficeEmail
 
         private MailMessage buildEmail()
         {
-            Random rand = new Random();
             MailMessage email = new MailMessage();
             email.To.Add(toEmailAddress);
             email.From = new MailAddress(fromEmailAddress);
-            email.Subject = "Sent from an app " + rand.Next(1001).ToString();
-            email.Body = "Testing";
-            return email;
+            email.Subject = messageSubject;
+
+            string emailOpening = "Hello,";
+            string emailIntro = $"I am expecting {visitorName} to request a parking pass for the today.";
+            string emailCarDetails = "Car details: COLOR YEAR MAKE MODEL, STATE Plates - LICENSE";
+            string emailClose = "Thank you,";
+            string emailSignature = "JANE DOE\nApartment 1-1";
+            string emailMessage = emailOpening + "\n\n" + emailIntro + "\n\n" + emailCarDetails + "\n\n" + emailClose + "\n" + emailSignature;
+
+            email.Body = emailMessage;
+            return (email);
         }
 
         private SmtpClient buildSmptClient()
